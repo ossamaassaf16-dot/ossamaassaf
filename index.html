@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وجهتك المتكاملة - v3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #f3f4f6; margin: 0; }
+        .amz-header { background: #131921; color: white; padding: 15px; position: sticky; top: 0; z-index: 50; }
+        .service-card { background: white; border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: 0.3s; }
+        .service-card:active { transform: scale(0.95); }
+        input, select { border: 1.5px solid #d1d5db !important; border-radius: 8px !important; padding: 12px !important; width: 100%; margin-bottom: 15px; background: #fff; }
+        .btn-send { background: #FFD814; color: #111; font-weight: bold; width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #FCD200; }
+    </style>
+</head>
+<body>
+
+    <header class="amz-header flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-bars text-xl"></i>
+            <span class="text-xl font-bold">وجهتك المتكاملة</span>
+        </div>
+        <i class="fas fa-user-circle text-2xl"></i>
+    </header>
+
+    <main class="p-4">
+        <div id="home-page" class="grid grid-cols-2 gap-4">
+            <div onclick="openOrder('net', 'فواتير الإنترنت')" class="service-card"><i class="fas fa-wifi text-blue-500 text-3xl mb-2"></i><p class="font-bold">فواتير النت</p></div>
+            <div onclick="openOrder('games', 'شحن ألعاب')" class="service-card"><i class="fas fa-gamepad text-purple-500 text-3xl mb-2"></i><p class="font-bold">شحن ألعاب</p></div>
+            <div onclick="openOrder('phone', 'الهاتف الأرضي')" class="service-card"><i class="fas fa-phone text-green-600 text-3xl mb-2"></i><p class="font-bold">هاتف أرضي</p></div>
+            <div onclick="openOrder('cash', 'سيرياتيل كاش')" class="service-card"><i class="fas fa-wallet text-red-600 text-3xl mb-2"></i><p class="font-bold">سيرياتيل كاش</p></div>
+        </div>
+
+        <div id="order-page" class="hidden bg-white p-6 rounded-2xl shadow-2xl border mt-2">
+            <button onclick="goHome()" class="text-blue-600 font-bold mb-4 flex items-center gap-2"><i class="fas fa-arrow-right"></i> عودة للرئيسية</button>
+            <h2 id="order-title" class="text-2xl font-black mb-6 text-gray-800"></h2>
+            
+            <form id="contact-form">
+                <div id="dynamic-fields"></div>
+                
+                <label class="block text-sm font-bold mb-1">رقم حسابك (المحول منه):</label>
+                <input type="text" id="sender_acc" name="sender_acc" required placeholder="رقم حساب شام كاش">
+
+                <button type="submit" id="submit-btn" class="btn-send">تأكيد وإرسال الطلب</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // تفعيل المفتاح الخاص بك
+        emailjs.init("H7JgehVna1iPaDf7H");
+
+        function openOrder(type, title) {
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('order-page').classList.remove('hidden');
+            document.getElementById('order-title').innerText = title;
+
+            let fields = "";
+            if(type === 'net') {
+                fields = `
+                    <label class="block text-sm font-bold mb-1">اختر مزود الإنترنت:</label>
+                    <select id="provider" name="provider">
+                        <option>تراسل (ADSL)</option>
+                        <option>آية (Aya)</option>
+                        <option>سبيس نت (SpaceNet)</option>
+                        <option>سوا (Sawa)</option>
+                        <option>إلما نت (ElmaNet)</option>
+                        <option>فيوتشر (Future)</option>
+                        <option>مدى (Mada)</option>
+                        <option>جمعية الحاسبات (SCS)</option>
+                    </select>
+                    <label class="block text-sm font-bold mb-1">رقم الهاتف أو اسم المستخدم:</label>
+                    <input type="text" id="details" name="details" required>
+                `;
+            } else if(type === 'games') {
+                fields = `
+                    <label class="block text-sm font-bold mb-1">اللعبة:</label>
+                    <select id="provider" name="provider"><option>ببجي موبايل</option><option>فري فاير</option></select>
+                    <label class="block text-sm font-bold mb-1">ID اللاعب:</label>
+                    <input type="text" id="details" name="details" required>
+                `;
+            } else {
+                fields = `<label class="block text-sm font-bold mb-1">التفاصيل:</label><input type="text" id="details" name="details" required>`;
+            }
+            document.getElementById('dynamic-fields').innerHTML = fields;
+        }
+
+        function goHome() {
+            document.getElementById('order-page').classList.add('hidden');
+            document.getElementById('home-page').classList.remove('hidden');
+        }
+
+        document.getElementById('contact-form').onsubmit = function(event) {
+            event.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "جاري الإرسال...";
+            btn.disabled = true;
+
+            // أرسل البيانات باستخدام المعرفات الخاصة بك من موقع EmailJS
+            // استبدل 'YOUR_SERVICE_ID' و 'YOUR_TEMPLATE_ID' بالقيم من حسابك
+            emailjs.send("service_default", "template_default", {
+                service_name: document.getElementById('order-title').innerText,
+                provider: document.getElementById('provider') ? document.getElementById('provider').value : "N/A",
+                details: document.getElementById('details').value,
+                sender_acc: document.getElementById('sender_acc').value
+            })
+            .then(function() {
+                alert("تم الإرسال بنجاح يا أسامة! سيتم التنفيذ قريباً.");
+                btn.disabled = false;
+                btn.innerText = "تأكيد وإرسال الطلب";
+                goHome();
+            }, function(error) {
+                alert("خطأ: يرجى التأكد من تسمية القالب في EmailJS بـ template_default");
+                btn.disabled = false;
+                btn.innerText = "تأكيد وإرسال الطلب";
+            });
+        };
+    </script>
+</body>
+</html>
