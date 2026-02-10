@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وجهتك المتكاملة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        
+        :root {
+            --primary: #1a237e;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: var(--bg);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent);
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .page { display: none; animation: slideIn 0.4s ease-out; }
+        .page.active { display: block; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-styled {
+            background: #f1f5f9;
+            border: 2px solid transparent !important;
+            border-radius: 12px !important;
+            padding: 14px !important;
+            transition: 0.3s;
+        }
+
+        .input-styled:focus {
+            background: white;
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+        }
+
+        .btn-premium {
+            background: linear-gradient(to right, #f59e0b, #d97706);
+            color: white;
+            font-weight: 700;
+            padding: 16px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-page" class="page active min-h-screen flex items-center justify-center p-6">
+        <div class="w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl">
+            <div class="text-center mb-8">
+                <div class="inline-block p-4 bg-amber-100 rounded-full mb-4">
+                    <i class="fas fa-shield-halved text-3xl text-amber-600"></i>
+                </div>
+                <h2 class="text-3xl font-black text-slate-800">أهلاً بك</h2>
+                <p class="text-slate-500">سجل دخولك للبدء باستخدام خدماتنا</p>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="reg-name" placeholder="الاسم الكامل" class="input-styled">
+                <input type="number" id="reg-phone" placeholder="رقم الموبايل" class="input-styled">
+                <button onclick="saveAndLogin()" class="w-full btn-premium text-lg mt-4">إنشاء الحساب <i class="fas fa-arrow-left mr-2"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-page" class="page">
+        <header class="header-gradient p-8 text-white">
+            <div class="flex justify-between items-center mb-6">
+                <button onclick="openSettings()" class="bg-white/10 p-3 rounded-xl"><i class="fas fa-cog"></i></button>
+                <div class="flex gap-2 text-xl opacity-50">
+                    <i class="fas fa-wifi"></i>
+                    <i class="fas fa-battery-full"></i>
+                </div>
+            </div>
+            <div class="text-center py-4">
+                <h1 class="text-4xl font-black mb-2 tracking-tight text-amber-400">وجهتك المتكاملة</h1>
+                <p class="text-slate-300 text-sm">كل ما تحتاجه في مكان واحد</p>
+            </div>
+        </header>
+
+        <main class="px-6 -mt-8 pb-10">
+            <div class="grid grid-cols-2 gap-4">
+                <div onclick="openRecharge()" class="service-card shadow-lg">
+                    <div class="icon-circle bg-blue-100 text-blue-600"><i class="fas fa-bolt"></i></div>
+                    <span class="font-bold text-slate-700">تحويل رصيد</span>
+                </div>
+                <div onclick="openIsp()" class="service-card shadow-lg">
+                    <div class="icon-circle bg-green-100 text-green-600"><i class="fas fa-globe"></i></div>
+                    <span class="font-bold text-slate-700">الإنترنت</span>
+                </div>
+                <div onclick="openCash()" class="service-card shadow-lg border-red-100">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Syriatel_logo.svg/1200px-Syriatel_logo.svg.png" class="w-12 h-12 object-contain mb-3">
+                    <span class="font-bold text-red-600">سيرياتيل كاش</span>
+                </div>
+                <div onclick="openGames()" class="service-card shadow-lg">
+                    <div class="icon-circle bg-purple-100 text-purple-600"><i class="fas fa-gamepad"></i></div>
+                    <span class="font-bold text-slate-700">شحن ألعاب</span>
+                </div>
+                <div onclick="openShamCash()" class="service-card col-span-2 shadow-xl bg-slate-900 text-white">
+                    <div class="flex items-center gap-4 w-full">
+                        <div class="icon-circle bg-amber-500 text-white mb-0 shrink-0"><i class="fas fa-wallet"></i></div>
+                        <div class="text-right">
+                            <p class="font-bold text-lg text-amber-400">شام كاش</p>
+                            <p class="text-xs text-slate-400">ربط الحساب ودفع الفواتير</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="form-page" class="page bg-white min-h-screen">
+        <div class="p-6 flex items-center justify-between border-b">
+            <button onclick="navigateTo('main-page')" class="text-2xl text-slate-800"><i class="fas fa-times"></i></button>
+            <span id="form-title" class="text-xl font-bold"></span>
+            <div class="w-8"></div>
+        </div>
+        
+        <div id="form-content" class="p-6 space-y-6">
+            </div>
+
+        <div class="fixed bottom-0 left-0 right-0 p-6 bg-white border-t">
+            <button onclick="sendFinalRequest()" class="w-full btn-premium">تأكيد الطلب الآن</button>
+        </div>
+    </div>
+
+    <script>
+        emailjs.init("H7JgehVna1iPaDf7H");
+        let user = { name: "", phone: "" };
+        let activeService = "";
+
+        function navigateTo(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function saveAndLogin() {
+            user.name = document.getElementById('reg-name').value;
+            user.phone = document.getElementById('reg-phone').value;
+            if(user.name && user.phone) navigateTo('main-page');
+            else alert("يرجى تعبئة بياناتك");
+        }
+
+        function openRecharge() {
+            activeService = "تحويل رصيد";
+            document.getElementById('form-title').innerText = "شحن رصيد موبايل";
+            document.getElementById('form-content').innerHTML = `
+                <div>
+                    <label class="block mb-2 font-bold">الشركة المشغلة</label>
+                    <select id="field-1" class="input-styled">
+                        <option>سيرياتيل - Syriatel</option>
+                        <option>ام تي ان - MTN</option>
+                    </select>
+                </div>
+                <input type="number" id="field-2" placeholder="رقم الهاتف (09xxxxxxxx)" class="input-styled">
+                <input type="number" id="field-3" placeholder="المبلغ المطلوب بالليرة" class="input-styled">
+            `;
+            navigateTo('form-page');
+        }
+
+        function openIsp() {
+            activeService = "فواتير الإنترنت";
+            const isps = ["آي نت", "رن نت", "ليما", "سوا", "فيو", "اية", "زاد", "SCS", "امنية", "ناس", "ليزر", "لاين نت", "الكم", "امواج", "تكامل", "يارا", "هايبر", "هاي فاي", "برو نت", "MTS", "دنيا", "سما نت"];
+            let options = isps.map(i => `<option>${i}</option>`).join('');
+            document.getElementById('form-title').innerText = "تسديد فواتير نت";
+            document.getElementById('form-content').innerHTML = `
+                <label class="block font-bold">اختر المزود</label>
+                <select id="field-1" class="input-styled">${options}</select>
+                <input type="text" id="field-2" placeholder="رقم الهاتف أو الاشتراك" class="input-styled">
+            `;
+            navigateTo('form-page');
+        }
+
+        function openGames() {
+            activeService = "شحن ألعاب";
+            document.getElementById('form-title').innerText = "متجر الألعاب";
+            document.getElementById('form-content').innerHTML = `
+                <select id="game-type" class="input-styled" onchange="updateGameUI()">
+                    <option value="pubg">ببجي موبايل (PUBG)</option>
+                    <option value="ff">فري فاير (Free Fire)</option>
+                    <option value="clash">كلاش اوف كلانس</option>
+                </select>
+                <div id="game-options" class="mt-4"></div>
+                <input type="text" id="field-id" placeholder="ID اللاعب (الأيدي)" class="input-styled">
+            `;
+            updateGameUI();
+            navigateTo('form-page');
+        }
+
+        function updateGameUI() {
+            const type = document.getElementById('game-type').value;
+            const area = document.getElementById('game-options');
+            if(type === 'pubg') {
+                area.innerHTML = `<select id="field-qty" class="input-styled">
+                    <option>60 شدة / 130 ل.س</option><option>325 شدة / 650 ل.س</option>
+                    <option>660 شدة / 1200 ل.س</option><option>3850 شدة / 5500 ل.س</option>
+                </select>`;
+            } else {
+                area.innerHTML = `<input type="text" id="field-qty" placeholder="أدخل الكمية المطلوبة" class="input-styled">`;
+            }
+        }
+
+        function openCash() {
+            activeService = "سيرياتيل كاش";
+            document.getElementById('form-title').innerText = "سيرياتيل كاش";
+            document.getElementById('form-content').innerHTML = `
+                <div class="p-4 bg-red-50 text-red-600 rounded-xl text-sm mb-4">خدمة التحويل الفوري للأرقام</div>
+                <input type="number" id="field-1" placeholder="الرقم المستلم" class="input-styled">
+                <input type="number" id="field-2" placeholder="المبلغ المراد تحويله" class="input-styled">
+            `;
+            navigateTo('form-page');
+        }
+
+        function openShamCash() {
+            activeService = "شام كاش";
+            document.getElementById('form-title').innerText = "خدمة شام كاش";
+            document.getElementById('form-content').innerHTML = `
+                <div class="p-4 bg-slate-100 rounded-xl border-2 border-dashed border-amber-500 mb-4">
+                    <p class="text-xs text-slate-500">كود المحفظة الخاص بنا:</p>
+                    <p class="font-mono font-bold text-[10px] break-all text-slate-800">9f5144183ea1d2ddb32cd5e2f94c42c3</p>
+                </div>
+                <input type="text" id="field-1" placeholder="رقم حسابك في شام كاش" class="input-styled">
+                <input type="number" id="field-2" placeholder="المبلغ الذي قمت بتحويله" class="input-styled">
+            `;
+            navigateTo('form-page');
+        }
+
+        function sendFinalRequest() {
+            const f1 = document.getElementById('field-1')?.value || "";
+            const f2 = document.getElementById('field-2')?.value || "";
+            const gid = document.getElementById('field-id')?.value || "";
+            const gq = document.getElementById('field-qty')?.value || "";
+
+            const params = {
+                from_name: `${user.name} | ${user.phone}`,
+                service_type: activeService,
+                message: `البيانات الأساسية: ${f1} - ${f2} | بيانات اللعبة: ID:${gid} الكمية:${gq}`
+            };
+
+            emailjs.send('service_eoyjl2b', '__ejs-test-mail-service__', params)
+                .then(() => {
+                    alert("✅ تم إرسال طلبك بنجاح! شكراً لثقتك بالماركة.");
+                    navigateTo('main-page');
+                });
+        }
+
+        function openSettings() {
+            alert("إعدادات الحساب: " + user.name + " (" + user.phone + ")");
+        }
+    </script>
+</body>
+</html>
