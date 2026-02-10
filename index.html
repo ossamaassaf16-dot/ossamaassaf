@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وجهتك المتكاملة | منصة الخدمات الذكية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background: #0f172a; color: white; margin: 0; overflow-x: hidden; }
+        .page { display: none; animation: fadeIn 0.4s ease-out; }
+        .active-page { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        .game-card:hover { transform: scale(1.05); border-color: #3b82f6; }
+    </style>
+</head>
+<body>
+
+    <nav class="p-4 glass sticky top-0 z-50 flex justify-between items-center px-6">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
+            <i class="fas fa-bolt text-yellow-400 text-2xl"></i>
+            <span class="text-xl font-black italic">وجهتك المتكاملة</span>
+        </div>
+        <div class="text-[10px] bg-emerald-500/20 text-emerald-400 p-2 rounded-lg border border-emerald-500/30 font-mono">
+            Sham Cash: 9f514418...
+        </div>
+    </nav>
+
+    <div id="home" class="page active-page p-6">
+        <div class="text-center py-10">
+            <h1 class="text-3xl font-black mb-2">أهلاً بك في عالمك الرقمي</h1>
+            <p class="text-gray-400 text-sm">اختر القسم الذي تريد البدء به</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div onclick="showPage('games')" class="glass p-6 rounded-[2rem] text-center cursor-pointer border-b-4 border-blue-500">
+                <i class="fas fa-gamepad text-4xl text-blue-500 mb-4"></i>
+                <h3 class="font-bold">شحن ألعاب</h3>
+            </div>
+            <div onclick="showPage('bills')" class="glass p-6 rounded-[2rem] text-center cursor-pointer border-b-4 border-emerald-500">
+                <i class="fas fa-file-invoice-dollar text-4xl text-emerald-500 mb-4"></i>
+                <h3 class="font-bold">فواتير إنترنت</h3>
+            </div>
+            <div onclick="showPage('cash')" class="glass p-6 rounded-[2rem] text-center cursor-pointer border-b-4 border-red-500">
+                <i class="fas fa-wallet text-4xl text-red-500 mb-4"></i>
+                <h3 class="font-bold">سيرياتيل كاش</h3>
+            </div>
+            <div onclick="showPage('acc')" class="glass p-6 rounded-[2rem] text-center cursor-pointer border-b-4 border-purple-500">
+                <i class="fas fa-headphones text-4xl text-purple-500 mb-4"></i>
+                <h3 class="font-bold">إكسسوارات</h3>
+            </div>
+        </div>
+    </div>
+
+    <div id="games" class="page p-6">
+        <button onclick="showPage('home')" class="mb-6 text-blue-400 font-bold"><i class="fas fa-arrow-right ml-2"></i> العودة للرئيسية</button>
+        <h2 class="text-2xl font-black mb-6">متجر الألعاب الإلكتروني</h2>
+        <div class="grid grid-cols-1 gap-4">
+            <div onclick="openOrder('ببجي موبايل (UC)')" class="glass game-card flex items-center p-3 rounded-2xl border transition-all cursor-pointer">
+                <img src="https://wstatic-prod.pubg.com/web/static/img/share/f_share_v2.jpg" class="w-20 h-20 rounded-xl object-cover ml-4">
+                <div>
+                    <h4 class="font-bold">PUBG Mobile</h4>
+                    <p class="text-[10px] text-gray-400">شحن شدات فوري بكافة الفئات</p>
+                </div>
+            </div>
+            <div onclick="openOrder('فري فاير (جواهر)')" class="glass game-card flex items-center p-3 rounded-2xl border transition-all cursor-pointer">
+                <img src="https://play-lh.googleusercontent.com/978nS_Eof366YI_S5MvF6YyU4W_iI9Eue8f5J0f7U7kM9hN2Z9J-G_pS3-7Uf_O9fA" class="w-20 h-20 rounded-xl object-cover ml-4">
+                <div>
+                    <h4 class="font-bold">Free Fire</h4>
+                    <p class="text-[10px] text-gray-400">شحن جواهر بالأيدي ID</p>
+                </div>
+            </div>
+            <div onclick="openOrder('كلاش أوف كلانس')" class="glass game-card flex items-center p-3 rounded-2xl border transition-all cursor-pointer">
+                <img src="https://play-lh.googleusercontent.com/LBy0Cc9Gf-p_j_S5SJcN9i3S5Rz_fX_yY5Y9G8G_Z9J-G_pS3-7Uf_O9fA" class="w-20 h-20 rounded-xl object-cover ml-4">
+                <div>
+                    <h4 class="font-bold">Clash of Clans</h4>
+                    <p class="text-[10px] text-gray-400">شحن ذهب ومجوهرات</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="bills" class="page p-6">
+        <button onclick="showPage('home')" class="mb-6 text-blue-400 font-bold"><i class="fas fa-arrow-right ml-2"></i> العودة</button>
+        <h2 class="text-2xl font-black mb-4">استعلام ودفع الفواتير</h2>
+        <div class="glass p-6 rounded-[2rem] space-y-4">
+            <select id="bill_isp" class="w-full bg-[#1e293b] p-4 rounded-xl outline-none text-sm">
+                <option>1- i-net</option><option>2- runnet</option><option>3- lema</option><option>4- sawa</option>
+                <option>5- view</option><option>6- aya</option><option>7- zad</option><option>8- scs</option>
+                <option>9- omniya</option><option>10- nas</option><option>11- lazer</option><option>12- linnet</option>
+                <option>13- e-lcom</option><option>14- waves</option><option>15- takamol</option><option>16- yara</option>
+                <option>17- hypernet</option><option>18- hi fi</option><option>19- pronet</option><option>20- mts</option>
+                <option>21- dunia</option><option>22- samanet</option><option>23- mtn</option>
+            </select>
+            <input type="text" id="bill_phone" placeholder="رقم الهاتف أو كود المشترك" class="w-full bg-[#1e293b] p-4 rounded-xl outline-none">
+            <button onclick="checkBill()" class="w-full bg-emerald-600 p-4 rounded-xl font-bold">استعلام فوري</button>
+            <div id="bill_result" class="hidden p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-center text-sm">
+                جاري الاتصال بسيرفر المزود... تم إرسال طلب استعلام للمسؤول.
+            </div>
+        </div>
+    </div>
+
+    <div id="orderModal" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center p-6 text-right">
+        <div class="glass w-full max-w-sm p-6 rounded-[2.5rem]">
+            <h3 id="modalTitle" class="text-xl font-bold mb-4">تقديم طلب</h3>
+            <input type="text" id="user_name" placeholder="اسمك الكريم" class="w-full bg-[#1e293b] p-3 rounded-xl mb-3 outline-none">
+            <textarea id="order_note" placeholder="التفاصيل (الكمية/الأيدي/الرقم)" class="w-full bg-[#1e293b] p-3 rounded-xl mb-4 outline-none" rows="3"></textarea>
+            <button onclick="finalSubmit()" class="w-full bg-blue-600 p-4 rounded-xl font-bold mb-2">تأكيد الإرسال</button>
+            <button onclick="closeModal()" class="w-full text-gray-400 text-sm">إلغاء</button>
+        </div>
+    </div>
+
+    <script>
+        const botToken = "8402221733:AAFFdesPj5OP_fvveoYIE2aDNokViMdpTNo";
+        const chatId = "5191060931";
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
+            document.getElementById(pageId).classList.add('active-page');
+            window.scrollTo(0,0);
+        }
+
+        let currentService = "";
+        function openOrder(service) {
+            currentService = service;
+            document.getElementById('modalTitle').innerText = "شحن: " + service;
+            document.getElementById('orderModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').classList.add('hidden');
+        }
+
+        async function finalSubmit() {
+            const name = document.getElementById('user_name').value;
+            const note = document.getElementById('order_note').value;
+            if(!name || !note) return alert("اكمل البيانات");
+
+            const text = `🎯 *طلب جديد*%0A👤 *العميل:* ${name}%0A🛠 *الخدمة:* ${currentService}%0A📝 *التفاصيل:* ${note}`;
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=Markdown`);
+            
+            alert("✅ تم إرسال طلبك! سيصلك الإشعار فوراً.");
+            closeModal();
+            showPage('home');
+        }
+
+        function checkBill() {
+            const res = document.getElementById('bill_result');
+            res.classList.remove('hidden');
+            // هنا نرسل للمسؤول إشعار أن هناك شخص يستعلم
+            const isp = document.getElementById('bill_isp').value;
+            const phone = document.getElementById('bill_phone').value;
+            const text = `🔍 *استعلام عن فاتورة*%0A🌐 *المزود:* ${isp}%0A📞 *الرقم:* ${phone}`;
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}&parse_mode=Markdown`);
+        }
+    </script>
+</body>
+</html>
