@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وجهتك المتكاملة - النسخة الاحترافية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #EAEDED; margin: 0; }
+        .nav-amazon { background-color: #131921; color: white; padding: 12px 15px; position: sticky; top: 0; z-index: 1000; }
+        
+        /* شريط الإعلانات */
+        .slider-container { position: relative; width: 100%; height: 180px; overflow: hidden; background: #232f3e; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease-in-out; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding: 20px; }
+        .slide.active { opacity: 1; }
+        
+        .service-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px; margin-top: -20px; position: relative; z-index: 10; }
+        .card { background: white; border-radius: 8px; padding: 15px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; border: 1px solid #ddd; }
+        .card:active { background-color: #f7f7f7; transform: scale(0.98); }
+        
+        input, select { border: 1px solid #a6a6a6 !important; border-radius: 4px !important; padding: 12px !important; width: 100%; margin-top: 5px; margin-bottom: 12px; }
+        .btn-amazon { background: #FFD814; border: 1px solid #FCD200; border-radius: 8px; width: 100%; padding: 14px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <header class="nav-amazon flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <i class="fas fa-bars text-2xl"></i>
+            <h1 class="font-bold text-lg">وجهتك المتكاملة</h1>
+        </div>
+        <i class="fas fa-user-circle text-2xl text-gray-300"></i>
+    </header>
+
+    <div id="slider" class="slider-container">
+        <div class="slide active bg-gradient-to-l from-blue-800 to-black">
+            <div><h2 class="text-xl font-black italic text-yellow-400">عروض الإنترنت المذهلة</h2><p>تسديد فوري لجميع المزودات في سوريا</p></div>
+        </div>
+        <div class="slide bg-gradient-to-l from-purple-800 to-black">
+            <div><h2 class="text-xl font-black italic text-yellow-400">شحن ألعابك بضغطة زر</h2><p>ببجي موبايل وفري فاير بأقل الأسعار</p></div>
+        </div>
+        <div class="slide bg-gradient-to-l from-green-800 to-black">
+            <div><h2 class="text-xl font-black italic text-yellow-400">خدمات الكاش والرصيد</h2><p>تحويل آمن وسريع على مدار الساعة</p></div>
+        </div>
+    </div>
+
+    <main id="home-view" class="p-2">
+        <div class="service-grid">
+            <div onclick="openService('net', 'فواتير الإنترنت')" class="card"><i class="fas fa-wifi text-blue-500 text-3xl mb-2"></i><p class="font-bold text-sm">فواتير النت</p></div>
+            <div onclick="openService('games', 'شحن ألعاب')" class="card"><i class="fas fa-gamepad text-purple-500 text-3xl mb-2"></i><p class="font-bold text-sm">شحن ألعاب</p></div>
+            <div onclick="openService('landline', 'الهاتف الأرضي')" class="card"><i class="fas fa-phone text-green-600 text-3xl mb-2"></i><p class="font-bold text-sm">هاتف أرضي</p></div>
+            <div onclick="openService('gate', 'حجز بوابات')" class="card"><i class="fas fa-network-wired text-indigo-600 text-3xl mb-2"></i><p class="font-bold text-sm">حجز بوابات</p></div>
+            <div onclick="openService('cash', 'سيرياتيل كاش')" class="card"><i class="fas fa-wallet text-red-600 text-3xl mb-2"></i><p class="font-bold text-sm">سيرياتيل كاش</p></div>
+            <div onclick="openService('units', 'تحويل رصيد')" class="card"><i class="fas fa-bolt text-yellow-500 text-3xl mb-2"></i><p class="font-bold text-sm">تحويل رصيد</p></div>
+        </div>
+    </main>
+
+    <div id="order-view" class="hidden p-4">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <button onclick="goBack()" class="text-blue-600 text-sm mb-4"><i class="fas fa-arrow-right"></i> عودة للرئيسية</button>
+            <h2 id="order-title" class="text-xl font-black border-b pb-2 mb-4"></h2>
+            
+            <form id="main-form">
+                <div id="dynamic-fields"></div>
+                
+                <div class="bg-blue-50 p-3 rounded text-[11px] mb-4 border border-blue-100">
+                    <p class="font-bold">حساب الدفع (شام كاش):</p>
+                    <p class="font-mono text-blue-700">9f5144183ea1d2ddb32cd5e2f94c42c3</p>
+                </div>
+
+                <label class="block font-bold text-xs">رقم حسابك (المحول منه):</label>
+                <input type="text" id="sender_acc" required placeholder="رقم حسابك">
+
+                <button type="submit" id="submit-btn" class="btn-amazon">تأكيد وإرسال الطلب</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // الربط ببياناتك
+        emailjs.init("H7JgehVna1iPaDf7H");
+
+        // شريط الإعلانات
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        function showSlides() {
+            slides.forEach(s => s.classList.remove('active'));
+            slideIndex++;
+            if (slideIndex > slides.length) slideIndex = 1;
+            slides[slideIndex-1].classList.add('active');
+            setTimeout(showSlides, 4000);
+        }
+        showSlides();
+
+        // وظائف التنقل
+        function openService(type, title) {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('slider').classList.add('hidden');
+            document.getElementById('order-view').classList.remove('hidden');
+            document.getElementById('order-title').innerText = title;
+
+            let fields = "";
+            if(type === 'net') {
+                fields = `
+                    <label class="text-xs font-bold">المزود:</label>
+                    <select id="provider">
+                        <option>تراسل (Telecom)</option><option>آية (Aya)</option><option>سبيس نت (SpaceNet)</option>
+                        <option>سوا (Sawa)</option><option>إلما (Elma)</option><option>فيوتشر (Future)</option>
+                        <option>مدى (Mada)</option><option>زاد (Zad)</option><option>الجمعية (SCS)</option>
+                    </select>
+                    <label class="text-xs font-bold">رقم الهاتف:</label>
+                    <input type="text" id="details" required>`;
+            } else if(type === 'games') {
+                fields = `
+                    <select id="provider"><option>ببجي</option><option>فري فاير</option></select>
+                    <input type="text" id="details" required placeholder="أدخل الآيدي (ID)">`;
+            } else {
+                fields = `<input type="text" id="details" required placeholder="الرقم أو التفاصيل"><input type="number" id="amount" placeholder="المبلغ">`;
+            }
+            document.getElementById('dynamic-fields').innerHTML = fields;
+        }
+
+        function goBack() {
+            document.getElementById('order-view').classList.add('hidden');
+            document.getElementById('home-view').classList.remove('hidden');
+            document.getElementById('slider').classList.remove('hidden');
+        }
+
+        // الإرسال الفعلي
+        document.getElementById('main-form').onsubmit = function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "جاري الإرسال...";
+            btn.disabled = true;
+
+            const params = {
+                service_name: document.getElementById('order-title').innerText,
+                provider: document.getElementById('provider') ? document.getElementById('provider').value : "عام",
+                details: document.getElementById('details').value,
+                sender_acc: document.getElementById('sender_acc').value
+            };
+
+            emailjs.send("service_86x2qen", "template_default", params)
+                .then(() => {
+                    alert("✅ تم إرسال طلبك لأسامة بنجاح!");
+                    btn.disabled = false;
+                    btn.innerText = "تأكيد وإرسال الطلب";
+                    goBack();
+                }, (err) => {
+                    alert("❌ فشل الإرسال، تأكد من اسم القالب في EmailJS");
+                    btn.disabled = false;
+                    btn.innerText = "تأكيد وإرسال الطلب";
+                });
+        };
+    </script>
+</body>
+</html>
